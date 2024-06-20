@@ -4,3 +4,4 @@ case e-commerce website
 - Next Js
 - shadcn component library
 - Tailwind CSS
+- lucide-react for svgs

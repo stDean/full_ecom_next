@@ -1,11 +1,17 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import NextImage from "next/image";
 import { useRouter } from "next/navigation";
+import { Rnd } from "react-rnd";
 import { useToast } from "@/components/ui/use-toast";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { cn } from "@/lib/utils";
+import { HandleComponent } from "@/components/HandleComponent";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { RadioGroup, Radio } from "@headlessui/react";
+import { COLORS } from "@/validators/options_validator";
+import { Label } from "@/components/ui/label";
 
 interface DesignConfiguratorProps {
   configId: string;
@@ -20,6 +26,10 @@ export const DesignConfigurator = ({
 }: DesignConfiguratorProps) => {
   const { toast } = useToast();
   const router = useRouter();
+
+  const [options, setOptions] = useState<{ color: (typeof COLORS)[number] }>({
+    color: COLORS[0],
+  });
 
   const containerRef = useRef<HTMLDivElement>(null);
   const phoneCaseRef = useRef<HTMLDivElement>(null);
@@ -49,10 +59,95 @@ export const DesignConfigurator = ({
           <div
             className={cn(
               "absolute inset-0 left-[3px] top-px right-[3px] bottom-px rounded-[32px]",
-              {}
+              `bg-${options.color.tw}`
             )}
           />
         </div>
+
+        <Rnd
+          default={{
+            x: 150,
+            y: 205,
+            height: imageDimensions.height / 4,
+            width: imageDimensions.width / 4,
+          }}
+          className="absolute z-20 border-[3px] border-primary"
+          lockAspectRatio
+          resizeHandleComponent={{
+            bottomLeft: <HandleComponent />,
+            bottomRight: <HandleComponent />,
+            topLeft: <HandleComponent />,
+            topRight: <HandleComponent />,
+          }}
+        >
+          <div className="relative w-full h-full">
+            <NextImage
+              src={imageUrl}
+              fill
+              alt="your image"
+              className="pointer-events-none"
+            />
+          </div>
+        </Rnd>
+      </div>
+
+      <div className="h-[37.5rem] w-full col-span-full lg:col-span-1 flex flex-col bg-white">
+        <ScrollArea className="relative flex-1 overflow-auto">
+          <div
+            aria-hidden="true"
+            className="absolute z-10 inset-x-0 bottom-0 h-12 bg-gradient-to-t from-white pointer-events-none"
+          />
+
+          <div className="px-8 pb-12 pt-8">
+            <h2 className="tracking-tight font-bold text-3xl">
+              Customize your case
+            </h2>
+
+            <div className="w-full h-px bg-zinc-200 my-6" />
+
+            <div className="relative mt-4 h-full flex flex-col justify-between">
+              <div className="flex flex-col gap-6">
+                <RadioGroup
+                  value={options.color}
+                  onChange={val => {
+                    setOptions(prev => ({
+                      ...prev,
+                      color: val,
+                    }));
+                  }}
+                >
+                  <Label>Color: {options.color.label}</Label>
+
+                  <div className="mt-3 flex items-center space-x-3">
+                    {COLORS.map(color => (
+                      <Radio
+                        key={color.label}
+                        value={color}
+                        className={({ checked }) =>
+                          cn(
+                            "relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 active:ring-0 focus:ring-0 active:outline-none focus:outline-none border-2 border-transparent",
+                            {
+                              [`border-${color.tw}`]: checked,
+                            }
+                          )
+                        }
+                      >
+                        <span
+                          className={cn(
+                            `bg-${color.tw}`,
+                            "h-8 w-8 rounded-full border border-black border-opacity-10"
+                          )}
+                        />
+                      </Radio>
+                    ))}
+                  </div>
+                </RadioGroup>
+
+
+              </div>
+            </div>
+          </div>
+        </ScrollArea>
       </div>
     </div>
   );

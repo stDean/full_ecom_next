@@ -15,3 +15,6 @@ case e-commerce website
 - sharp for converting large image to smaller, web friendly ones
 - zod for schema management
 - react-hook-form for form management
+- react-rnd a draggable and resizable component 
+- @headlessui/react: set of unstyled UI components
+

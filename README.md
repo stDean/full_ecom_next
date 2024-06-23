@@ -1,6 +1,7 @@
 case e-commerce website
 
 ## Tech Used
+
 - Next Js
 - shadcn component library
 - Tailwind CSS
@@ -10,3 +11,7 @@ case e-commerce website
 - lucide-react for svg
 - react-dropzone for file upload
 - @uploadthing/react, uploadthing for storing the file uploaded on the cloud
+- Prisma for DB OMR
+- sharp for converting large image to smaller, web friendly ones
+- zod for schema management
+- react-hook-form for form management

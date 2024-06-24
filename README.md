@@ -17,4 +17,4 @@ case e-commerce website
 - react-hook-form for form management
 - react-rnd a draggable and resizable component 
 - @headlessui/react: set of unstyled UI components
-
+- @tanstack/react-query: an asynchronous state management

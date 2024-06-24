@@ -18,3 +18,4 @@ case e-commerce website
 - react-rnd a draggable and resizable component 
 - @headlessui/react: set of unstyled UI components
 - @tanstack/react-query: an asynchronous state management
+- react-dom-confetti for the celebration confetti

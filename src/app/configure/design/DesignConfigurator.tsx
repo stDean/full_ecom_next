@@ -31,6 +31,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Check, ChevronsUpDown } from "lucide-react";
 import { BASE_PRICE } from "@/config/products";
+import { useUploadThing } from "@/lib/uploadthing";
 
 interface DesignConfiguratorProps {
   configId: string;
@@ -46,6 +47,9 @@ export const DesignConfigurator = ({
   const { toast } = useToast();
   const router = useRouter();
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  const phoneCaseRef = useRef<HTMLDivElement>(null);
+
   const [options, setOptions] = useState<{
     color: (typeof COLORS)[number];
     model: (typeof MODELS.options)[number];
@@ -57,11 +61,96 @@ export const DesignConfigurator = ({
     material: MATERIALS.options[0],
     finish: FINISHES.options[0],
   });
+  const [renderedDimension, setRenderedDimension] = useState<{
+    width: number;
+    height: number;
+  }>({
+    width: imageDimensions.width / 4,
+    height: imageDimensions.height / 4,
+  });
+  const [renderedPosition, setRenderedPosition] = useState<{
+    x: number;
+    y: number;
+  }>({
+    x: 150,
+    y: 205,
+  });
 
-  console.log(options);
+  const { startUpload } = useUploadThing("imageUploader");
 
-  const containerRef = useRef<HTMLDivElement>(null);
-  const phoneCaseRef = useRef<HTMLDivElement>(null);
+  const saveConfiguration = async () => {
+    try {
+      // get where the phone is on the screen
+      const {
+        left: caseLeft,
+        top: caseTop,
+        width,
+        height,
+      } = phoneCaseRef.current!.getBoundingClientRect();
+
+      // get where the container is on the screen
+      const { left: containerLeft, top: containerTop } =
+        containerRef.current!.getBoundingClientRect();
+
+      // get where the phone is in the container
+      const leftOffset = caseLeft - containerLeft;
+      const topOffset = caseTop - containerTop;
+
+      // their actual position of the image in the phone case
+      const actualX = renderedPosition.x - leftOffset;
+      const actualY = renderedPosition.y - topOffset;
+
+      // create a canvas, the phone dimension is same of canvas so as to know where to crop
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+
+      // create a new image
+      // get image to draw on canvas
+      const userImage = new Image();
+      userImage.crossOrigin = "anonymous";
+      userImage.src = imageUrl;
+      // wait till image has been successfully loaded from the url
+      await new Promise(resolve => (userImage.onload = resolve));
+
+      // draw the image on the canvas
+      ctx?.drawImage(
+        userImage,
+        actualX,
+        actualY,
+        renderedDimension.width,
+        renderedDimension.height
+      );
+
+      const base64 = canvas.toDataURL();
+      const base64Data = base64.split(",")[1];
+
+      const blob = base64ToBlob(base64Data, "image/png");
+      const file = new File([blob], "filename.png", { type: "image/png" });
+
+      await startUpload([file], { configId });
+    } catch (error) {
+      toast({
+        title: "Something went wrong",
+        description:
+          "There was a problem saving your config, please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const base64ToBlob = (base64: string, mimeType: string) => {
+    const byteCharacters = atob(base64);
+    const byteNumbers = new Array(byteCharacters.length);
+
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    return new Blob([byteArray], { type: mimeType });
+  };
 
   return (
     <div className="relative mt-20 grid grid-cols-1 lg:grid-cols-3 mb-20 pb-20">
@@ -107,6 +196,18 @@ export const DesignConfigurator = ({
             bottomRight: <HandleComponent />,
             topLeft: <HandleComponent />,
             topRight: <HandleComponent />,
+          }}
+          onResizeStop={(_, __, ref, ___, { x, y }) => {
+            setRenderedDimension({
+              height: parseInt(ref.style.height.slice(0, -2)),
+              width: parseInt(ref.style.width.slice(0, -2)),
+            });
+
+            setRenderedPosition({ x, y });
+          }}
+          onDragStop={(_, data) => {
+            const { x, y } = data;
+            setRenderedPosition({ x, y });
           }}
         >
           <div className="relative w-full h-full">
@@ -298,7 +399,7 @@ export const DesignConfigurator = ({
                 )}
               </p>
 
-              <Button>
+              <Button size="sm" className="w-full">
                 Continue
                 <ArrowRight className="h-4 w-4 ml-1.5 inline" />
               </Button>

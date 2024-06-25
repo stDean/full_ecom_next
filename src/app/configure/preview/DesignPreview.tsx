@@ -14,6 +14,7 @@ import { BASE_PRICE, PRODUCT_PRICES } from "@/config/products";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { createCheckoutSession } from "./actions";
+import { LoginModal } from "@/components/LoginModal";
 
 interface DesignPreviewProps {
   configuration: Configuration;
@@ -86,6 +87,7 @@ function DesignPreview({ configuration }: DesignPreviewProps) {
       </div>
 
       {/* Login Modal */}
+      <LoginModal isOpen={isLoginModalOpen} setIsOpen={setIsLoginModalOpen} />
 
       <div className="mt-20 flex flex-col items-center md:grid text-sm sm:grid-cols-12 sm:grid-rows-1 sm:gap-x-6 md:gap-x-8 lg:gap-x-12">
         <div className="md:col-span-4 lg:col-span-3 md:row-span-2 md:row-end-2">
@@ -168,8 +170,7 @@ function DesignPreview({ configuration }: DesignPreviewProps) {
             <div className="mt-8 flex justify-end pb-12">
               <Button
                 className="px-4 sm:px-6 lg:px-8"
-                // onClick={() => handleClick()}
-                onClick={() => createPaymentSession({ configId: id })}
+                onClick={() => handleClick()}
               >
                 Check out <ArrowRight className="h-4 w-4 ml-1.5 inline" />
               </Button>

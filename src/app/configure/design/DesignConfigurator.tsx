@@ -154,6 +154,12 @@ export const DesignConfigurator = ({
     return new Blob([byteArray], { type: mimeType });
   };
 
+  /**
+   * When you call the saveConfig function
+   * run the mutation function which is a promise that resolves 2 functions
+   * if it fails run the onError
+   * else run the onSuccess
+   */
   const { mutate: saveConfig, isPending } = useMutation({
     mutationKey: ["save-config"],
     mutationFn: async (args: SaveConfigArgs) => {

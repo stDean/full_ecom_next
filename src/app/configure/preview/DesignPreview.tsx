@@ -42,6 +42,10 @@ function DesignPreview({ configuration }: DesignPreviewProps) {
     totalPrice += PRODUCT_PRICES.material.polycarbonate;
   if (finish === "textured") totalPrice += PRODUCT_PRICES.finish.textured;
 
+  /**
+   * when the createPaymentSession is called
+   * run the mutation function
+   */
   const { mutate: createPaymentSession } = useMutation({
     mutationKey: ["get-checkout-session"],
     mutationFn: createCheckoutSession,
@@ -59,7 +63,14 @@ function DesignPreview({ configuration }: DesignPreviewProps) {
   });
 
   const handleClick = () => {
-    console.log("Hello There");
+    if (user) {
+      // create payment session
+      createPaymentSession({ configId: id });
+    } else {
+      // need to log in
+      localStorage.setItem("configurationId", id);
+      setIsLoginModalOpen(true);
+    }
   };
 
   return (
@@ -155,7 +166,11 @@ function DesignPreview({ configuration }: DesignPreviewProps) {
             </div>
 
             <div className="mt-8 flex justify-end pb-12">
-              <Button className="px-4 sm:px-6 lg:px-8" onClick={handleClick}>
+              <Button
+                className="px-4 sm:px-6 lg:px-8"
+                // onClick={() => handleClick()}
+                onClick={() => createPaymentSession({ configId: id })}
+              >
                 Check out <ArrowRight className="h-4 w-4 ml-1.5 inline" />
               </Button>
             </div>

@@ -44,7 +44,7 @@ export async function POST(req: Request) {
       const shippingAddress = session.shipping_details!.address;
 
       // update the order in the db
-      const updatedOrder = await db.order.update({
+      await db.order.update({
         where: { id: orderId },
         data: {
           isPaid: true,

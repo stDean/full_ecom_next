@@ -13,6 +13,7 @@ interface PhonePreviewProps {
 export const PhonePreview = ({ croppedImageUrl, color }: PhonePreviewProps) => {
   const ref = useRef<HTMLDivElement>(null);
 
+  // the size of the phone on user device
   const [renderedDimensions, setRenderedDimensions] = useState({
     height: 0,
     width: 0,

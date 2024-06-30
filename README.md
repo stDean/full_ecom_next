@@ -1,5 +1,7 @@
 case e-commerce website
 
+![Portfolio App](https://i.ibb.co/f25mKQH/case.png)
+
 ## Tech Used
 
 - Next Js
@@ -15,7 +17,7 @@ case e-commerce website
 - sharp for converting large image to smaller, web friendly ones
 - zod for schema management(schema validation)
 - react-hook-form for form management
-- react-rnd a draggable and resizable component 
+- react-rnd a draggable and resizable component
 - @headlessui/react: set of unstyled UI components
 - @tanstack/react-query: an asynchronous state management
 - react-dom-confetti for the celebration confetti

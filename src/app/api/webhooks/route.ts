@@ -8,6 +8,9 @@ import { OrderReceivedEmail } from "@/components/emails/OrderReceivedEmail";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// the request stripe make to our own api on successful checkout
+// using a webhook
+
 export async function POST(req: Request) {
   try {
     const body = await req.text();

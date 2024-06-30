@@ -6,6 +6,7 @@ import { Loader2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import getAuthStatus from "./actions";
 
+// his page is used as the KINDE redirect page
 export default function AuthCallbackPage() {
   const [configId, setConfigId] = useState<string | null>(null);
   const router = useRouter();

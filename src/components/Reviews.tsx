@@ -27,11 +27,11 @@ function splitArray<T>(array: Array<T>, numParts: number) {
   for (let i = 0; i < array.length; i++) {
     const index = i % numParts;
     // create an array for every remainder e.g 0 % 3 = 0
-    // create an array at in dex 0 of the result array
+    // create an array at index 0 of the result array...
     if (!result[index]) {
       result[index] = [];
     }
-    // puch the value at the array index to the new array in the result
+    // push the value at the array index to the new array in the result
     result[index].push(array[i]);
   }
 
@@ -89,10 +89,11 @@ const ReviewColumn = ({
   const [columnHeight, setColumnHeight] = useState<number>(0);
   const duration = `${columnHeight * msPerPixel}ms`;
 
-  // getting how high the column is in the view so as to to determine the speed of animation 
+  // getting how high the column is in the view so as to to determine the speed of animation
   useEffect(() => {
     if (!columnRef.current) return;
 
+    // listen to changes on resize actions
     const resizeObserver = new window.ResizeObserver(() => {
       setColumnHeight(columnRef.current?.offsetHeight ?? 0);
     });
@@ -114,6 +115,7 @@ const ReviewColumn = ({
       {reviews.concat(reviews).map((imgSrc, reviewIndex) => (
         <Review
           key={reviewIndex}
+          // ?. means only when the reviewClassName is present should you invoke it
           className={reviewClassName?.(reviewIndex % reviews.length)}
           imgSrc={imgSrc}
         />
@@ -132,6 +134,7 @@ const ReviewGrid = () => {
   const column2 = columns[1];
   const column3 = splitArray(columns[2], 2);
 
+  // the reviewIndex depends on what images are shown
   return (
     <div
       ref={containerRef}

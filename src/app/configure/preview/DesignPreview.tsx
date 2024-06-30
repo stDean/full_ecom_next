@@ -51,6 +51,7 @@ function DesignPreview({ configuration }: DesignPreviewProps) {
     mutationKey: ["get-checkout-session"],
     mutationFn: createCheckoutSession,
     onSuccess: ({ url }) => {
+      // push to the stripe checkout page
       if (url) router.push(url);
       else throw new Error("Unable to retrieve payment URL.");
     },

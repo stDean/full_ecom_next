@@ -80,6 +80,18 @@ export const DesignConfigurator = ({
 
   const { startUpload } = useUploadThing("imageUploader");
 
+  /**
+   * This eventually uploads a new image, which is cropped version of the original image
+   * It get the phoneCase dimension
+   * Gets the container dimensions
+   * Get the offset between the dimensions
+   * the image position of the image on the screen
+   * create a canvas the same width and height of the phone
+   * then put the image in that canvas
+   * convert the image to png
+   * then upload it to uploadThing db passing the configId aa an optional data
+   * this then goes and update the croppedImageUrl in the db of the configuration table
+   */
   const saveConfiguration = async () => {
     try {
       // get where the phone is on the screen
@@ -94,7 +106,7 @@ export const DesignConfigurator = ({
       const { left: containerLeft, top: containerTop } =
         containerRef.current!.getBoundingClientRect();
 
-      // get where the phone is in the container
+      // get where the phone is in reference to the container
       const leftOffset = caseLeft - containerLeft;
       const topOffset = caseTop - containerTop;
 
@@ -142,6 +154,7 @@ export const DesignConfigurator = ({
     }
   };
 
+  // convert a base64 to .png
   const base64ToBlob = (base64: string, mimeType: string) => {
     const byteCharacters = atob(base64);
     const byteNumbers = new Array(byteCharacters.length);
@@ -224,6 +237,7 @@ export const DesignConfigurator = ({
           }}
           onResizeStop={(_, __, ref, ___, { x, y }) => {
             setRenderedDimension({
+              // e.g "500px" so we slice the px, then parse the "500" to an integer
               height: parseInt(ref.style.height.slice(0, -2)),
               width: parseInt(ref.style.width.slice(0, -2)),
             });

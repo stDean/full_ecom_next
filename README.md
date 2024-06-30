@@ -13,7 +13,7 @@ case e-commerce website
 - @uploadthing/react, uploadthing for storing the file uploaded on the cloud
 - Prisma for DB OMR
 - sharp for converting large image to smaller, web friendly ones
-- zod for schema management
+- zod for schema management(schema validation)
 - react-hook-form for form management
 - react-rnd a draggable and resizable component 
 - @headlessui/react: set of unstyled UI components

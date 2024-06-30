@@ -45,6 +45,7 @@ export default function UploadPage() {
   const handleDropAccepted = (acceptedFiles: File[]) => {
     // the acceptedFiles are auto dropped by react drop zone
     // the optional params {configId} is cos we specified in the input in the core.ts file
+    // the configId = undefined so it creates a new configuration in the db 
     startUpload(acceptedFiles, { configId: undefined });
     setIsDragOver(false);
   };
